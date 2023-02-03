@@ -1,27 +1,34 @@
 package com.example.investment.stockorder.dto.request;
 
-import com.example.investment.stockorder.dto.StandardDto;
+import com.example.investment.stockorder.model.StockOrder;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class StockOrderRequestDto implements StandardDto<Integer> {
+public class StockOrderRequestDto implements RequestDto<StockOrder> {
   @NotBlank
-  private UUID accountId;
+  private Long accountId;
   @NotBlank
-  private UUID stockId;
+  private Long stockId;
   @NotBlank
   private float stockQuantity;
 
   @Override
-  public Integer toEntity() {
-    return null;
+  public StockOrder toEntity() {
+    return StockOrder.builder()
+        .stockQuantity(this.stockQuantity)
+        .stockId(this.stockId)
+        .build();
   }
 
   @Override
-  public Integer toEntity(Integer integer) {
-    return null;
+  public StockOrder toEntity(StockOrder stockOrder) {
+    return StockOrder.builder()
+        .id(stockOrder.getId())
+        .stockQuantity(this.stockQuantity)
+        .stockId(this.stockId)
+        .build();
   }
 }

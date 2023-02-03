@@ -1,19 +1,14 @@
 package com.example.investment.stockorder.dto.response;
 
-import com.example.investment.stockorder.dto.StandardDto;
+import com.example.investment.stockorder.enuns.StockOrderStatusEnum;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class StockOrderResponseDto implements StandardDto<Integer> {
-  private String status;
-
-  @Override
-  public Integer toEntity() {
-    return null;
-  }
-
-  @Override
-  public Integer toEntity(Integer integer) {
-    return null;
-  }
+@Builder
+public class StockOrderResponseDto {
+  private Long stockOrderId;
+  private float stockQuantity;
+  private Long stockId;
+  private StockOrderStatusEnum status;
 }
