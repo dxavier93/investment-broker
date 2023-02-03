@@ -2,6 +2,9 @@ package com.example.investment.stockorder.controller;
 
 import com.example.investment.stockorder.dto.request.StockOrderRequestDto;
 import com.example.investment.stockorder.dto.response.StockOrderResponseDto;
+import com.example.investment.stockorder.model.EventHistory;
+import com.example.investment.stockorder.repository.EventHistoryRepository;
+import com.example.investment.stockorder.service.EventHistoryService;
 import com.example.investment.stockorder.service.command.StockOrderCommandService;
 import com.example.investment.stockorder.service.query.StockOrderQueryService;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +21,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/stock-orders")
+@RequestMapping("/histories")
 @Slf4j
-public class StockOrderController {
-  private final StockOrderQueryService queryService;
-  private final StockOrderCommandService commandService;
-
-  @PostMapping(value = "/")
-  @ResponseStatus(HttpStatus.CREATED)
-  public void create(@RequestBody StockOrderRequestDto stockOrderRequestDto) {
-    commandService.create(stockOrderRequestDto);
-  }
+public class EventHistoryController {
+  private final EventHistoryService service;
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
-  public List<StockOrderResponseDto> findAll() {
-    return queryService.findAll();
+  public List<EventHistory> findAll() {
+    return service.findAll();
   }
 }
