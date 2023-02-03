@@ -17,17 +17,8 @@ public class StockOrderProducer {
   private KafkaTemplate<String, String> kafkaTemplate;
 
   public void send(String string) {
+    log.info("Sending kafka message " + string);
     CompletableFuture<SendResult<String, String>> future =
         kafkaTemplate.send("topic_demo", string);
-
-    future.whenComplete(new BiConsumer() {
-
-      @Override
-      public void accept(Object o, Object o2) {
-        log.info("Sent message=[" + string +
-            "] with values =[" + o.toString() + "] and ["+o2.toString()+"]");
-        future.complete(null);
-      }
-    });
   }
 }

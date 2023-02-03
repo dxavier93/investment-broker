@@ -20,6 +20,7 @@ public class StockOrderService extends StandardServiceBase<StockOrder>{
   }
 
   public StockOrder create(RequestDto dto){
+    producer.send("Testando kafka producer");
     return super.create(dto);
   }
   public List<StockOrder> findAll(){

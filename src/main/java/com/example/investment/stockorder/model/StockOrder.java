@@ -23,7 +23,6 @@ import static com.example.investment.stockorder.enuns.StockOrderStatusEnum.COMPL
 public class StockOrder implements StandardModel{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @NotNull
   private Long id;
   @NotNull
   private float stockQuantity;
