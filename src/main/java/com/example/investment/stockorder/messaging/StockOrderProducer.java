@@ -24,15 +24,13 @@ public class StockOrderProducer {
   private ObjectMapper objectMapper;
 
   public void send(StockOrderRequestDto requestDto) {
-    log.info("Sending kafka message " + requestDto);
+    log.info(String.format("Sending kafka message: [%s]", requestDto));
     //CompletableFuture<SendResult<String, StockOrderRequestDto>> future =
     try{
       String event = objectMapper.writeValueAsString(requestDto);
       kafkaTemplate.send(topicName, event);
     }catch (Exception ex){
-      log.error("Problems: "+ex.getMessage());
+      log.error(String.format("Problems: %s",ex.getMessage()));
     }
-
-    String u;
   }
 }

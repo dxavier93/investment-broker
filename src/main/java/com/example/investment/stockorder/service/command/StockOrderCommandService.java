@@ -14,7 +14,7 @@ public class StockOrderCommandService {
   private final StockOrderProducer producer;
 
   public void create(StockOrderRequestDto requestDto) {
-    String message = "Creating new stock order: [" + requestDto.toString() + "]";
+    String message = String.format("Creating new stock order: [%s]", requestDto);
     log.info(message);
     producer.send(requestDto);
   }

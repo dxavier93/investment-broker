@@ -31,7 +31,7 @@ public class StockOrderConsumer {
     StockOrderRequestDto requestDto =
         objectMapper.readValue(event.value().toString(), StockOrderRequestDto.class);
 
-    log.info("Received Message: [ " + requestDto + "]");
+    log.info(String.format("Received Message: [%s]", requestDto));
 
     eventHistoryService.create(requestDto.toString(), "CREATE");
 
