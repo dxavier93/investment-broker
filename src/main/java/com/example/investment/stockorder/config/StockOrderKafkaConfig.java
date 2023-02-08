@@ -1,5 +1,6 @@
-package com.example.investment.account.config;
+package com.example.investment.stockorder.config;
 
+import com.example.investment.stockorder.dto.request.StockOrderRequestDto;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -18,28 +19,27 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class KafkaConfig {
-
-
-  @Value("${spring.kafka.topic.name}")
-  private String topicName;
-
+public class StockOrderKafkaConfig {
   @Value(value = "${spring.kafka.bootstrap-servers}")
   private String bootstrapAddress;
 
+  @Value(value = "${spring.kafka.order.event.topic.name}")
+  private String topicName;
+
   @Bean
-  public KafkaAdmin kafkaAdmin() {
+  public KafkaAdmin stockOrderKafkaAdmin() {
     Map<String, Object> configs = new HashMap<>();
     configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
     return new KafkaAdmin(configs);
   }
 
   @Bean
-  public NewTopic topic() {
+  public NewTopic stockOrderTopic() {
     return new NewTopic(topicName, 1, (short) 1);
   }
+
   @Bean
-  public ProducerFactory<String, String> producerFactory() {
+  public ProducerFactory<String, String> stockOrderProducerFactory() {
     Map<String, Object> configProps = new HashMap<>();
     configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
     configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -48,7 +48,8 @@ public class KafkaConfig {
   }
 
   @Bean
-  public KafkaTemplate<String, String> kafkaTemplate() {
-    return new KafkaTemplate<>(producerFactory());
+  //@Qualifier("stockOrderKafkaTemplate")
+  public KafkaTemplate<String, String> stockOrderKafkaTemplate() {
+    return new KafkaTemplate<>(stockOrderProducerFactory());
   }
 }

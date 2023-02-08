@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 @Slf4j
-public class ControllerExceptionHandler {
+public class AccountControllerExceptionHandler {
 
   private ErrorMessage getStandardErrorMessage(Exception ex, WebRequest request, HttpStatus httpStatus) {
     log.error("Exception occurred: " + ex.getMessage());
