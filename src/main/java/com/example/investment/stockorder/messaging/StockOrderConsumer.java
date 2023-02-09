@@ -26,8 +26,19 @@ public class StockOrderConsumer {
   private final StockOrderRepository repository;
 
   private final ObjectMapper objectMapper;
+
+  @KafkaListener(topics = "#{'${spring.kafka.account.response.topic.name}'}", groupId = "1")
+  public void onReceiveAccount(ConsumerRecord event) throws IOException {
+    StockOrderRequestDto requestDto =
+        objectMapper.readValue(event.value().toString(), StockOrderRequestDto.class);
+
+    log.info(String.format("Received Account Message: [%s]", requestDto));
+
+    log.info("Account --> ");
+  }
+
   @KafkaListener(topics = "#{'${spring.kafka.order.event.topic.name}'}", groupId = "1")
-  public void onReceive(ConsumerRecord event) throws IOException {
+  public void onReceiveEvent(ConsumerRecord event) throws IOException {
     StockOrderRequestDto requestDto =
         objectMapper.readValue(event.value().toString(), StockOrderRequestDto.class);
 

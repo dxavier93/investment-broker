@@ -1,10 +1,21 @@
-# investment-broker
-Investment broker
-
-select stock - send order to broker - valid quantity on the market -  valid money in account - antifraud - Hedge validation
+# Investment-broker
 
 
-select stock - send order to broker -  valid money in account
+### TO-DO list
+- Cache database for event history
+- How other projects organize directories
+- add some number format for account Model (like "xxx-xxx-xxx")
+- search for String.format in java 8++
+- separate event controller (separate event insert/read)(maybe a new service for it)
+- add github code coverage
+- Completable future for kafka
+- 
+#### Initial idea
+- select stock - send order to broker - valid quantity on the market -  valid money in account - antifraud - Hedge validation
+
+#### Actual idea
+- {GOOD} - [Send order] -- Stock order ->  valid account [OK]   -> stock order confirm -> [Confirm order]
+- {BAD} -  [Send order] -- Stock order ->  valid account [FAIL] -> stock order denied  -> [Cancel order]
 
 KAFKA
 ####

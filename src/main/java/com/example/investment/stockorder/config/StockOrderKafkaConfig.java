@@ -23,19 +23,17 @@ public class StockOrderKafkaConfig {
   @Value(value = "${spring.kafka.bootstrap-servers}")
   private String bootstrapAddress;
 
-  @Value(value = "${spring.kafka.order.event.topic.name}")
+  @Value(value = "${spring.kafka.order.topic.name}")
   private String topicName;
+
+  @Value(value = "${spring.kafka.order.event.topic.name}")
+  private String topicNameEvent;
 
   @Bean
   public KafkaAdmin stockOrderKafkaAdmin() {
     Map<String, Object> configs = new HashMap<>();
     configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
     return new KafkaAdmin(configs);
-  }
-
-  @Bean
-  public NewTopic stockOrderTopic() {
-    return new NewTopic(topicName, 1, (short) 1);
   }
 
   @Bean
@@ -49,7 +47,23 @@ public class StockOrderKafkaConfig {
 
   @Bean
   //@Qualifier("stockOrderKafkaTemplate")
+  public KafkaTemplate<String, String> stockOrderEventKafkaTemplate() {
+    return new KafkaTemplate<>(stockOrderProducerFactory());
+  }
+
+  @Bean
+  //@Qualifier("stockOrderKafkaTemplate")
   public KafkaTemplate<String, String> stockOrderKafkaTemplate() {
     return new KafkaTemplate<>(stockOrderProducerFactory());
+  }
+
+  @Bean
+  public NewTopic stockOrderEventTopic() {
+    return new NewTopic(topicNameEvent, 1, (short) 1);
+  }
+
+  @Bean
+  public NewTopic stockOrderTopic() {
+    return new NewTopic(topicName, 1, (short) 1);
   }
 }

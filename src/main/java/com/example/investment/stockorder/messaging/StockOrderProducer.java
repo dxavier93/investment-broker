@@ -16,19 +16,26 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class StockOrderProducer {
   @Value(value = "${spring.kafka.order.event.topic.name}")
-  private String topicName;
+  private String topicEvent;
+
+  @Value(value = "${spring.kafka.order.topic.name}")
+  private String topicOrder;
+  @Autowired
+  @Qualifier("stockOrderEventKafkaTemplate")
+  private KafkaTemplate<String, String> templateEvent;
+
   @Autowired
   @Qualifier("stockOrderKafkaTemplate")
-  private KafkaTemplate<String, String> kafkaTemplate;
+  private KafkaTemplate<String, String> templateOrder;
   @Autowired
   private ObjectMapper objectMapper;
 
   public void send(StockOrderRequestDto requestDto) {
     log.info(String.format("Sending kafka message: [%s]", requestDto));
-    //CompletableFuture<SendResult<String, StockOrderRequestDto>> future =
     try{
-      String event = objectMapper.writeValueAsString(requestDto);
-      kafkaTemplate.send(topicName, event);
+      String stockOrder = objectMapper.writeValueAsString(requestDto);
+      templateEvent.send(topicEvent, stockOrder);
+      templateOrder.send(topicOrder, stockOrder);
     }catch (Exception ex){
       log.error(String.format("Problems: %s",ex.getMessage()));
     }
