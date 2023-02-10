@@ -2,12 +2,7 @@ package com.example.investment.account.controller;
 
 import com.example.investment.account.dto.request.AccountRequestDto;
 import com.example.investment.account.dto.response.AccountResponseDto;
-import com.example.investment.account.service.command.AccountCommandService;
-import com.example.investment.account.service.query.AccountQueryService;
-import com.example.investment.stockorder.dto.request.StockOrderRequestDto;
-import com.example.investment.stockorder.dto.response.StockOrderResponseDto;
-import com.example.investment.stockorder.service.command.StockOrderCommandService;
-import com.example.investment.stockorder.service.query.StockOrderQueryService;
+import com.example.investment.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,18 +20,17 @@ import java.util.List;
 @RequestMapping("/accounts")
 @Slf4j
 public class AccountController {
-  private final AccountQueryService queryService;
-  private final AccountCommandService commandService;
+  private final AccountService service;
 
   @PostMapping(value = "/")
   @ResponseStatus(HttpStatus.CREATED)
   public void create(@RequestBody AccountRequestDto requestDto) {
-    commandService.create(requestDto);
+    service.create(requestDto.toEntity());
   }
 
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
   public List<AccountResponseDto> findAll() {
-    return queryService.findAll();
+    return service.findAll();
   }
 }

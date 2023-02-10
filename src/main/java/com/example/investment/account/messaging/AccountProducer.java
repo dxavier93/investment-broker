@@ -16,30 +16,15 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @Slf4j
 public class AccountProducer {
-  @Value(value = "${spring.kafka.account.event.topic.name}")
-  private String topicEvent;
-
   @Value(value = "${spring.kafka.account.response.topic.name}")
   private String topicResponse;
-
   @Autowired
-  @Qualifier("accountEventKafkaTemplate")
-  private KafkaTemplate<String, String> templateEvent;
-
-  @Autowired
-  @Qualifier("accountResponseKafkaTemplate")
-  private KafkaTemplate<String, String> templateResponse;
-
+  private KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
   private ObjectMapper objectMapper;
 
-  public void sendEvent(String string) {
-    log.info("Sending kafka message " + string);
-        templateEvent.send(topicEvent, string);
-  }
-
   public void sendResponse(AccountResponse response) throws JsonProcessingException {
     log.info("Sending kafka message " + response);
-        templateResponse.send(topicResponse, objectMapper.writeValueAsString(response));
+    kafkaTemplate.send(topicResponse, objectMapper.writeValueAsString(response));
   }
 }

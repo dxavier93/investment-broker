@@ -21,7 +21,6 @@ import java.util.Map;
 public class AccountKafkaConfig {
   @Value(value = "${spring.kafka.bootstrap-servers}")
   private String bootstrapAddress;
-
   @Value(value = "${spring.kafka.account.event.topic.name}")
   private String topicEventName;
 
@@ -34,30 +33,10 @@ public class AccountKafkaConfig {
     configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
     return new KafkaAdmin(configs);
   }
-
-  @Bean
-  public ProducerFactory<String, String> accountProducerFactory() {
-    Map<String, Object> configProps = new HashMap<>();
-    configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-    configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    return new DefaultKafkaProducerFactory<>(configProps);
-  }
-  @Bean
-  //@Qualifier("accountKafkaTemplate")
-  public KafkaTemplate<String, String> accountEventKafkaTemplate() {
-    return new KafkaTemplate<>(accountProducerFactory());
-  }
-  @Bean
-  //@Qualifier("stockOrderKafkaTemplate")
-  public KafkaTemplate<String, String> accountResponseKafkaTemplate() {
-    return new KafkaTemplate<>(accountProducerFactory());
-  }
   @Bean
   public NewTopic accountEventTopic() {
     return new NewTopic(topicEventName, 1, (short) 1);
   }
-
   @Bean
   public NewTopic accountResponseTopic() {
     return new NewTopic(topicEventName, 1, (short) 1);

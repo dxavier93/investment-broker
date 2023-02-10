@@ -1,4 +1,4 @@
-package com.example.investment.stockorder.messaging;
+package com.example.investment.stockorder.messaging.consumer;
 
 import com.example.investment.account.model.AccountResponse;
 import com.example.investment.stockorder.enuns.StockOrderStatusEnum;

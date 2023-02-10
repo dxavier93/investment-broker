@@ -1,5 +1,6 @@
-package com.example.investment.stockorder.messaging;
+package com.example.investment.stockorder.messaging.consumer;
 
+import com.example.investment.stockorder.messaging.producer.StockOrderProducer;
 import com.example.investment.stockorder.model.StockOrder;
 import com.example.investment.stockorder.repository.StockOrderRepository;
 import com.example.investment.stockorder.service.EventHistoryService;

@@ -1,4 +1,4 @@
-package com.example.investment.stockorder.messaging;
+package com.example.investment.stockorder.messaging.producer;
 
 import com.example.investment.stockorder.dto.request.StockOrderRequestDto;
 import com.example.investment.stockorder.model.StockOrder;
@@ -19,8 +19,7 @@ public class StockOrderProducer {
   @Value(value = "${spring.kafka.order.topic.name}")
   private String topicOrder;
   @Autowired
-  @Qualifier("stockOrderKafkaTemplate")
-  private KafkaTemplate<String, String> templateOrder;
+  private KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
   private ObjectMapper objectMapper;
 
@@ -28,7 +27,7 @@ public class StockOrderProducer {
     log.info(String.format("Sending kafka message: [%s]", entity));
     try{
       String stockOrder = objectMapper.writeValueAsString(entity);
-      templateOrder.send(topicOrder, stockOrder);
+      kafkaTemplate.send(topicOrder, stockOrder);
     }catch (Exception ex){
       log.error(String.format("Problems: %s",ex.getMessage()));
     }

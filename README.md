@@ -8,7 +8,9 @@
 - search for String.format in java 8++
 - separate event controller (separate event insert/read)(maybe a new service for it)
 - add github code coverage
-- Completable future for kafka
+- Completable future for kafka??
+- New service with Http integration
+- New service with "Button" wait
 - 
 #### Initial idea
 - select stock - send order to broker - valid quantity on the market -  valid money in account - antifraud - Hedge validation

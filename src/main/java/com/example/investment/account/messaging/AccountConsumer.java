@@ -39,14 +39,4 @@ public class AccountConsumer {
             .build()
     );
   }
-
-  @KafkaListener(topics = "#{'${spring.kafka.order.event.topic.name}'}", groupId = "1")
-  public void onReceiveEvent(ConsumerRecord event) throws IOException {
-    AccountRequestDto requestDto =
-        objectMapper.readValue(event.value().toString(), AccountRequestDto.class);
-
-    log.info(String.format("Received Message: [%s]", requestDto));
-
-    repository.save(requestDto.toEntity());
-  }
 }

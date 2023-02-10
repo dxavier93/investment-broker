@@ -1,4 +1,4 @@
-package com.example.investment.stockorder.messaging;
+package com.example.investment.stockorder.messaging.producer;
 
 import com.example.investment.stockorder.model.StockOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +15,7 @@ public class StockOrderEventProducer {
   @Value(value = "${spring.kafka.order.event.topic.name}")
   private String topicEvent;
   @Autowired
-  @Qualifier("stockOrderEventKafkaTemplate")
-  private KafkaTemplate<String, String> templateEvent;
+  private KafkaTemplate<String, String> kafkaTemplate;
   @Autowired
   private ObjectMapper objectMapper;
 
@@ -24,7 +23,7 @@ public class StockOrderEventProducer {
     log.info(String.format("Sending kafka message: [%s]", entity));
     try{
       String stockOrder = objectMapper.writeValueAsString(entity);
-      templateEvent.send(topicEvent, stockOrder);
+      kafkaTemplate.send(topicEvent, stockOrder);
     }catch (Exception ex){
       log.error(String.format("Problems: %s",ex.getMessage()));
     }
