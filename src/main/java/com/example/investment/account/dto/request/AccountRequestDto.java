@@ -1,10 +1,8 @@
 package com.example.investment.account.dto.request;
 
 import com.example.investment.account.model.Account;
-import com.example.investment.stockorder.dto.request.RequestDto;
-import com.example.investment.stockorder.model.StockOrder;
+import com.example.investment.order.dto.request.RequestDto;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data

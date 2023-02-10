@@ -1,8 +1,8 @@
-package com.example.investment.account.messaging;
+package com.example.investment.stock.messaging;
 
-import com.example.investment.account.model.AccountResponse;
-import com.example.investment.account.repository.AccountRepository;
+import com.example.investment.stock.repository.StockRepository;
 import com.example.investment.order.model.Order;
+import com.example.investment.stock.model.StockResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,24 +15,24 @@ import java.io.IOException;
 @Component
 @Slf4j
 @AllArgsConstructor
-public class AccountConsumer {
-  private final AccountProducer producer;
-  private final AccountRepository repository;
+public class StockConsumer {
+  private final StockProducer producer;
+  private final StockRepository repository;
   private final ObjectMapper objectMapper;
 
-  @KafkaListener(topics = "#{'${spring.kafka.order.topic.name}'}", groupId = "account")
-  public void onReceiveAccount(ConsumerRecord event) throws IOException {
+  @KafkaListener(topics = "#{'${spring.kafka.order.topic.name}'}", groupId = "stock")
+  public void onReceiveStock(ConsumerRecord event) throws IOException {
     String responseStatus = "FAILED";
     Order order =
         objectMapper.readValue(event.value().toString(), Order.class);
 
-    log.info(String.format("Received Account Message: [%s]", order));
+    log.info(String.format("Received Stock Message: [%s]", order));
 
-    if (repository.findById(order.getAccountId()).isPresent())
+    if (repository.findById(order.getStockId()).isPresent())
       responseStatus = "OK";
 
     producer.sendResponse(
-        AccountResponse.builder()
+        StockResponse.builder()
             .StockOrderId(order.getId())
             .status(responseStatus)
             .build()

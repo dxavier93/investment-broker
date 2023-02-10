@@ -1,4 +1,4 @@
-package com.example.investment.account.config;
+package com.example.investment.stock.config;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -13,20 +13,21 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class AccountKafkaConfig {
+public class StockKafkaConfig {
   @Value(value = "${spring.kafka.bootstrap-servers}")
   private String bootstrapAddress;
-  @Value(value = "${spring.kafka.account.response.topic.name}")
+  @Value(value = "${spring.kafka.stock.response.topic.name}")
   private String topicName;
 
   @Bean
-  public KafkaAdmin AccountKafkaAdmin() {
+  public KafkaAdmin StockKafkaAdmin() {
     Map<String, Object> configs = new HashMap<>();
     configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
     return new KafkaAdmin(configs);
   }
+
   @Bean
-  public NewTopic accountResponseTopic() {
+  public NewTopic stockResponseTopic() {
     return new NewTopic(topicName, 1, (short) 1);
   }
 }
