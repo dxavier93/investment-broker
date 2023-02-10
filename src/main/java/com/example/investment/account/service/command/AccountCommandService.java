@@ -16,6 +16,6 @@ public class AccountCommandService {
   public void create(RequestDto requestDto){
     String message = "Creating new account: ["+requestDto.toString()+"]";
     log.info(message);
-    producer.send(message);
+    producer.sendEvent(message);
   }
 }

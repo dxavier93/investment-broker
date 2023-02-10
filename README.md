@@ -25,3 +25,4 @@ you need to install bin not source
 - create topic: .\bin\windows\kafka-topics.bat --create --topic topic_demo --bootstrap-server localhost:9092
 - produce on topic: .\bin\windows\kafka-console-producer.bat --topic topic_demo --bootstrap-server localhost:9092
 - consume on topic: .\bin\windows\kafka-console-consumer.bat --topic topic_demo --from-beginning --bootstrap-server localhost:9092
+- clear C:\tmp on log exceptions

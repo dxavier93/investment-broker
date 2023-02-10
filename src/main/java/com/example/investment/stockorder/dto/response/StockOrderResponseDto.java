@@ -10,5 +10,6 @@ public class StockOrderResponseDto {
   private Long stockOrderId;
   private float stockQuantity;
   private Long stockId;
+  private Long accountId;
   private StockOrderStatusEnum status;
 }

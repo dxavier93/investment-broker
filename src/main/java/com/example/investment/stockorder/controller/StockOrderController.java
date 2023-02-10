@@ -27,7 +27,7 @@ public class StockOrderController {
   @PostMapping(value = "/")
   @ResponseStatus(HttpStatus.CREATED)
   public void create(@RequestBody StockOrderRequestDto requestDto) {
-    commandService.create(requestDto);
+    commandService.create(requestDto.toEntity());
   }
 
   @GetMapping

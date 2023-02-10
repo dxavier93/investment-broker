@@ -1,5 +1,8 @@
 package com.example.investment.account.messaging;
 
+import com.example.investment.account.model.AccountResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,14 +17,29 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class AccountProducer {
   @Value(value = "${spring.kafka.account.event.topic.name}")
-  private String topicName;
-  @Autowired
-  @Qualifier("accountKafkaTemplate")
-  private KafkaTemplate<String, String> kafkaTemplate;
+  private String topicEvent;
 
-  public void send(String string) {
+  @Value(value = "${spring.kafka.account.response.topic.name}")
+  private String topicResponse;
+
+  @Autowired
+  @Qualifier("accountEventKafkaTemplate")
+  private KafkaTemplate<String, String> templateEvent;
+
+  @Autowired
+  @Qualifier("accountResponseKafkaTemplate")
+  private KafkaTemplate<String, String> templateResponse;
+
+  @Autowired
+  private ObjectMapper objectMapper;
+
+  public void sendEvent(String string) {
     log.info("Sending kafka message " + string);
-    CompletableFuture<SendResult<String, String>> future =
-        kafkaTemplate.send(topicName, string);
+        templateEvent.send(topicEvent, string);
+  }
+
+  public void sendResponse(AccountResponse response) throws JsonProcessingException {
+    log.info("Sending kafka message " + response);
+        templateResponse.send(topicResponse, objectMapper.writeValueAsString(response));
   }
 }

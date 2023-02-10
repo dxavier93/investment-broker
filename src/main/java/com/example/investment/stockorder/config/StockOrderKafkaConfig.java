@@ -50,7 +50,6 @@ public class StockOrderKafkaConfig {
   public KafkaTemplate<String, String> stockOrderEventKafkaTemplate() {
     return new KafkaTemplate<>(stockOrderProducerFactory());
   }
-
   @Bean
   //@Qualifier("stockOrderKafkaTemplate")
   public KafkaTemplate<String, String> stockOrderKafkaTemplate() {

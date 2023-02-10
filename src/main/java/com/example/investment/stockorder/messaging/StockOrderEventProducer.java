@@ -1,6 +1,5 @@
 package com.example.investment.stockorder.messaging;
 
-import com.example.investment.stockorder.dto.request.StockOrderRequestDto;
 import com.example.investment.stockorder.model.StockOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -8,19 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.CompletableFuture;
 
 @Component
 @Slf4j
-public class StockOrderProducer {
-  @Value(value = "${spring.kafka.order.topic.name}")
-  private String topicOrder;
+public class StockOrderEventProducer {
+  @Value(value = "${spring.kafka.order.event.topic.name}")
+  private String topicEvent;
   @Autowired
-  @Qualifier("stockOrderKafkaTemplate")
-  private KafkaTemplate<String, String> templateOrder;
+  @Qualifier("stockOrderEventKafkaTemplate")
+  private KafkaTemplate<String, String> templateEvent;
   @Autowired
   private ObjectMapper objectMapper;
 
@@ -28,7 +24,7 @@ public class StockOrderProducer {
     log.info(String.format("Sending kafka message: [%s]", entity));
     try{
       String stockOrder = objectMapper.writeValueAsString(entity);
-      templateOrder.send(topicOrder, stockOrder);
+      templateEvent.send(topicEvent, stockOrder);
     }catch (Exception ex){
       log.error(String.format("Problems: %s",ex.getMessage()));
     }
