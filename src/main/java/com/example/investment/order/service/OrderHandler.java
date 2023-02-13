@@ -2,6 +2,7 @@ package com.example.investment.order.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
@@ -19,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.time.Duration;
+import java.util.UUID;
 import java.util.concurrent.Executor;
 
 @EnableKafkaStreams
@@ -29,41 +31,23 @@ public class OrderHandler {
   private OrderHandlerService service;
 
   @Bean
-  public KStream<Long, String> stream(StreamsBuilder builder) {
-    JsonSerde<String> orderSerde = new JsonSerde<>(String.class);
-    KStream<Long, String> stream = builder
-        .stream("topic_account_response", Consumed.with(Serdes.Long(), orderSerde));
+  public KStream<String, String> kstreamOrders(StreamsBuilder builder) {
+    System.setProperty("spring.kafka.streams.state-dir", "/tmp/kafka-streams/"+ UUID.randomUUID());
 
-    stream.join(
-            builder.stream("topic_stock_response"),
-            service::process,
-            JoinWindows.of(Duration.ofSeconds(10)),
-            StreamJoined.with(Serdes.Long(), orderSerde, orderSerde))
-        .peek((k, o) -> log.info("Output: " + o))
+    Serde<String> stringSerde = Serdes.String();
+    JsonSerde<String> orderJsonSerde = new JsonSerde<>(String.class);
+
+    KStream<String, String> orderStockStream = builder.stream("topic_account_response",
+        Consumed.with(stringSerde, orderJsonSerde));
+    KStream<String, String> orderPaymentStream = builder.stream("topic_stock_response",
+        Consumed.with(stringSerde, orderJsonSerde));
+
+
+    orderStockStream.join(orderPaymentStream, service::process, JoinWindows.of(Duration.ofSeconds(10)),
+            StreamJoined.with(stringSerde, orderJsonSerde, orderJsonSerde))
+        .peek((s, entityJoin) -> log.debug("order joined: {}",entityJoin))
         .to("orders");
 
-    return stream;
-  }
-
-  @Bean
-  public KTable<Long, String> table(StreamsBuilder builder) {
-    KeyValueBytesStoreSupplier store =
-        Stores.persistentKeyValueStore("orders");
-    JsonSerde<String> orderSerde = new JsonSerde<>(String.class);
-    KStream<Long, String> stream = builder
-        .stream("orders", Consumed.with(Serdes.Long(), orderSerde));
-    return stream.toTable(Materialized.<Long, String>as(store)
-        .withKeySerde(Serdes.Long())
-        .withValueSerde(orderSerde));
-  }
-
-  @Bean
-  public Executor taskExecutor() {
-    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-    executor.setCorePoolSize(5);
-    executor.setMaxPoolSize(5);
-    executor.setThreadNamePrefix("kafkaSender-");
-    executor.initialize();
-    return executor;
+    return orderStockStream;
   }
 }
