@@ -5,9 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.util.List;
+
 @SpringBootApplication
-@EnableKafkaStreams
-@EnableAsync
 public class BrokerApplication {
 
 	public static void main(String[] args) {

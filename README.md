@@ -11,6 +11,9 @@
 - Completable future for kafka??
 - New service with Http integration
 - New service with "Button" wait
+- Use Decorator for notification
+- Use Akka
+- Implement concurrency
 - 
 #### Initial idea
 - select stock - send order to broker - valid quantity on the market -  valid money in account - antifraud - Hedge validation
